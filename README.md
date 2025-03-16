@@ -11,7 +11,7 @@ This is my repo for **STATS 220**.
 ### My Current University Mood
 Here is a meme that captures how I currently feel about my university studies:
 
-![University Mood](https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif)
+![My Mood](https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif)
 
 
 ## Useful Links
