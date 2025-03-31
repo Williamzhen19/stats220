@@ -1,0 +1,93 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+library(tidyverse)
+```
+
+```{css}
+h1 {
+  color:#666666;
+  padding: 20px;
+}
+
+body {
+  color:black;
+  font:Impact;
+  font_weight:bold;
+  background:#FFC0CB;
+  padding:10px;
+}
+
+h2 {
+  color:#666666;
+  padding: 20px;
+}
+
+```
+
+
+```{r}
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSDpYYD2SKossOP-T0NvRNBLodRAg2lOG1o4AMeQZFuby_Um-PPFMeBEvDTu1psSQeeegDW_LM63doY/pub?gid=1290470915&single=true&output=csv")
+
+latest_data <- logged_data %>%
+  rename(
+    Major = `What is your major?`,
+    Years = `How many years have you been learning English`,
+    Difficulty = `Do you find it difficult to learn python code`,
+    Degree_of_difficulty = `How hard did you find learning python`
+  )
+
+summary_values <- latest_data %>%
+  summarise(
+    AvgYears = mean(Years, na.rm = TRUE),
+    AvgDifficulty = mean(Degree_of_difficulty, na.rm = TRUE)
+  )
+
+avg_years <- summary_values$AvgYears
+avg_difficulty <- summary_values$AvgDifficulty
+```
+
+
+## Analysis of Python Learning Experiences
+
+This report analyzes data about Python learning experiences, including the difficulty levels and average time spent learning English. The purpose is to identify patterns and insights based on the collected observations.
+
+Based on the data, the average number of years spent learning English is **`r round(avg_years, 1)` years**. The average difficulty of learning Python is rated as **`r round(avg_difficulty, 1)`** on a scale of 1 to 10.
+
+```{r}
+bar_chart1 <- latest_data %>%
+  group_by(Major) %>%
+  summarise(AvgDegree = mean(Degree_of_difficulty, na.rm = TRUE)) %>%
+  ggplot(aes(x = Major, y = AvgDegree, fill = Major)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Average Difficulty of Learning Python by Major",
+    x = "Major",
+    y = "Average Difficulty"
+  ) +
+  theme_minimal()
+
+bar_chart1
+```
+
+```{r}
+bar_chart2 <- latest_data %>%
+  group_by(Major, Difficulty) %>%
+  summarise(Count = n()) %>%
+  ggplot(aes(x = Major, y = Count, fill = Difficulty)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Distribution of Difficulty in Learning Python by Major",
+    x = "Major",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+bar_chart2
+```
+
